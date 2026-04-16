@@ -5,6 +5,8 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
 import asyncio
 
+from app.models.user import User  # Import your models here
+
 config = context.config
 fileConfig(config.config_file_name)
 

@@ -1,0 +1,168 @@
+import random, time, httpx
+from datetime import datetime, timezone
+from fastapi import HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
+from app.models.user import User
+from app.core.config import settings
+from app.services import jwt as app_jwt
+
+REQUEST_ID_STORE = {}
+
+async def get_or_create_user(db: AsyncSession, phone: str) -> User:
+    """Fetches an existing user by phone, or creates a new unverified user."""
+    result = await db.execute(select(User).where(User.phone == phone))
+    user = result.scalars().first()
+    
+    if not user:
+        user = User(phone=phone, is_verified=False)
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        
+    return user
+
+
+async def send_otp_msg91(phone: str) -> str:
+    """Generates a 6-digit OTP, enforces a 30s rate limit, saves in memory, and prints."""
+
+    url = "https://api.msg91.com/api/v5/widget/sendOtp"
+    payload = {
+        "widgetId": settings.MSG_WIDGET_ID,
+        "identifier": phone,
+    }
+    headers = {
+        "content-type": "application/json",
+        "authkey": settings.MSG_AUTH_KEY
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            REQUEST_ID_STORE[phone] = data["message"]
+
+    except httpx.RequestError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Could not connect to the SMS gateway."
+        )
+    return data
+
+
+async def resend_otp_msg91(phone: str) -> str:
+    """Resends the OTP for the given phone number, enforcing a 30s rate limit and updating the in-memory store."""
+
+    if phone not in REQUEST_ID_STORE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No existing OTP request found for this phone number."
+        ) 
+
+    url = "https://api.msg91.com/api/v5/widget/retryOtp"
+    payload = {
+        "widgetId": settings.MSG_WIDGET_ID,
+        "reqId": REQUEST_ID_STORE[phone]
+    }
+    headers = {
+        "content-type": "application/json",
+        "authkey": settings.MSG_AUTH_KEY
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            REQUEST_ID_STORE[phone] = data["message"]
+    except httpx.RequestError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Could not connect to the SMS gateway."
+        )
+    return data
+
+
+async def verify_otp_msg91(phone: str, otp: str) -> bool:
+    """Checks the provided OTP against the in-memory store."""
+    
+    if phone not in REQUEST_ID_STORE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired OTP."
+        )
+    
+    url = "https://api.msg91.com/api/v5/widget/verifyOtp"
+    payload = {
+        "widgetId": settings.MSG_WIDGET_ID,
+        "reqId": REQUEST_ID_STORE[phone],
+        "otp": otp
+    }
+    headers = {
+        "content-type": "application/json",
+        "authkey": settings.MSG_AUTH_KEY
+    }
+    
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            if data["type"] != "success":
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Invalid or expired OTP."
+                )
+            del REQUEST_ID_STORE[phone]
+            return True
+
+    except httpx.RequestError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Could not connect to the SMS gateway."
+        )
+
+
+async def verify_user(phone: str, db: AsyncSession):
+    result = await db.execute(select(User).where(User.phone == phone))
+    user = result.scalars().first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+        
+    user.is_verified = True
+    user.last_login = datetime.now(timezone.utc)
+    await db.commit()
+    await db.refresh(user)
+    return user
+
+
+async def refresh_access_token(
+    refresh_token: str, 
+    db: AsyncSession
+):
+    """Validates the refresh token, checks user status, and issues a new access token."""
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Refresh token missing. Please log in."
+        )
+    
+    user_id = app_jwt.verify_token(refresh_token, expected_type="refresh")
+    
+
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalars().first()
+    
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User no longer exists.")
+    if user.is_blocked or not user.is_active:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User account is inactive or blocked.")
+    
+    new_access_token = app_jwt.create_access_token(subject=user.id)
+
+    return new_access_token
+
+

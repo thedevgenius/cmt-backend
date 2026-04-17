@@ -64,7 +64,7 @@ def verify_token(token: str, expected_type: str) -> str:
         )
     
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 def get_password_hash(password: str) -> str:
     sha256_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()

@@ -7,6 +7,7 @@ from sqlalchemy import select
 from app.models.user import User
 from app.core.config import settings
 from app.services import jwt as app_jwt
+from app.models.user import UserRole, User
 
 REQUEST_ID_STORE = {}
 
@@ -166,3 +167,32 @@ async def refresh_access_token(
     return new_access_token
 
 
+async def get_admin(db: AsyncSession, email: str, password: str) -> User:
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalars().first()
+
+    if not user or not user.password:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Invalid email or password."
+        )
+
+    if not app_jwt.verify_password(password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Invalid email or password."
+        )
+        
+    if user.role not in [UserRole.ADMIN, UserRole.STAFF]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Access denied. Admin or Staff privileges required."
+        )
+        
+    if not user.is_active or user.is_blocked:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This account is inactive or blocked."
+        )
+    
+    return user

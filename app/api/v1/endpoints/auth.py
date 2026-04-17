@@ -1,3 +1,5 @@
+
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, Response, HTTPException, status, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,6 +9,7 @@ from app.core.dependencies import get_db
 from app.services.jwt import create_access_token, create_refresh_token, verify_token
 from app.core.config import settings
 from app.schemas import auth as auth_schemas
+from app.models.user import User, UserRole
 
 
 router = APIRouter()
@@ -64,4 +67,39 @@ async def refresh_access_token(refresh_token: str | None = Cookie(default=None),
     return {
         "access_token": new_access_token,
         "token_type": "access"
+    }
+
+
+@router.post("/admin/login", response_model=auth_schemas.TokenResponse)
+async def admin_login(
+    request: auth_schemas.AdminLoginRequest, 
+    response: Response, # Needed to set the refresh cookie
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Direct Admin/Staff login: Verifies credentials and issues JWTs immediately.
+    """
+    user = await auth_service.get_admin(db, request.email, request.password)
+
+    user.last_login = datetime.now(timezone.utc)
+    await db.commit()
+
+    access_token = create_access_token(subject=user.id)
+    refresh_token = create_refresh_token(subject=user.id)
+    
+    cookie_max_age = settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60 
+    
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,   
+        secure=False,    # Change to True when deploying to production (HTTPS)
+        samesite="lax",  
+        max_age=cookie_max_age,
+        expires=cookie_max_age,
+    )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
     }

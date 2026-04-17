@@ -40,3 +40,8 @@ class OtpVerifyRequest(AuthRequest):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class AdminLoginRequest(BaseModel):
+    email: str
+    password: str

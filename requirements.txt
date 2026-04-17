@@ -7,5 +7,4 @@ asyncpg
 alembic
 httpx
 PyJWT
-bcrypt
-passlib[bcrypt]
+passlib[argon2]

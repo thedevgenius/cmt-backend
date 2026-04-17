@@ -8,3 +8,4 @@ alembic
 httpx
 PyJWT
 passlib[argon2]
+pydantic[email]

@@ -6,3 +6,6 @@ sqlalchemy[asyncio]
 asyncpg
 alembic
 httpx
+PyJWT
+bcrypt
+passlib[bcrypt]

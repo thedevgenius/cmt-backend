@@ -1,18 +1,18 @@
-import random, time, httpx
-from datetime import datetime, timezone
+import httpx
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.models.user import User
 from app.core.config import settings
-from app.services import jwt as app_jwt
+from app.core import jwt as app_jwt
 from app.models.user import UserRole, User
 
 REQUEST_ID_STORE = {}
 
 async def get_or_create_user(db: AsyncSession, phone: str) -> User:
     """Fetches an existing user by phone, or creates a new unverified user."""
+
     result = await db.execute(select(User).where(User.phone == phone))
     user = result.scalars().first()
     
@@ -124,20 +124,6 @@ async def verify_otp_msg91(phone: str, otp: str) -> bool:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Could not connect to the SMS gateway."
         )
-
-
-async def verify_user(phone: str, db: AsyncSession):
-    result = await db.execute(select(User).where(User.phone == phone))
-    user = result.scalars().first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-        
-    user.is_verified = True
-    user.last_login = datetime.now(timezone.utc)
-    await db.commit()
-    await db.refresh(user)
-    return user
 
 
 async def refresh_access_token(

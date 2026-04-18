@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 # Import your existing app setup
 from app.db.session import AsyncSessionLocal
 from app.models.user import User, UserRole
-from app.services.jwt import get_password_hash
+from app.core.jwt import get_password_hash
 
 async def create_super_admin():
     print("\n" + "="*40)

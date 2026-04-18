@@ -6,10 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas import auth as user_schemas
 from app.services import auth as auth_service
 from app.core.dependencies import get_db
-from app.services.jwt import create_access_token, create_refresh_token, verify_token
+from app.core.jwt import create_access_token, create_refresh_token
 from app.core.config import settings
 from app.schemas import auth as auth_schemas
-from app.models.user import User, UserRole
+from app.crud.user import user_crud
 
 
 router = APIRouter()
@@ -17,6 +17,7 @@ router = APIRouter()
 @router.post("/otp/send")
 async def send_otp(otp_request: user_schemas.OtpRequest, db: AsyncSession = Depends(get_db)):
     user = await auth_service.get_or_create_user(db, otp_request.phone_number)
+    print(f"OTP for {otp_request.get_e164()} is being sent to the user.")
     await auth_service.send_otp_msg91(otp_request.phone_number)
     return {"message": "OTP sent successfully"}
 
@@ -28,7 +29,13 @@ async def verify_otp(response: Response, otp_verify_request: user_schemas.OtpVer
     if not is_valid:
         return {"message": "Invalid OTP"}
     
-    user = await auth_service.verify_user(otp_verify_request.phone_number, db)
+    user = await user_crud.get_by_phone(db, phone=otp_verify_request.phone_number)
+    update_data = {
+        "is_verified": True,
+        "last_login": datetime.now(timezone.utc)
+    }
+
+    await user_crud.update(db, db_obj=user, obj_in=update_data)
 
     access_token = create_access_token(subject=user.id)
     refresh_token = create_refresh_token(subject=user.id)
@@ -103,3 +110,9 @@ async def admin_login(
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+
+@router.post("/logout")
+async def admin_logout(response: Response):
+    response.delete_cookie(key="refresh_token")
+    return {"message": "Logged out successfully"}

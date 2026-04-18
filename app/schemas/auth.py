@@ -1,33 +1,48 @@
 from pydantic import BaseModel, Field, field_validator
+import phonenumbers
+
 
 class AuthRequest(BaseModel):
-    country: str = "IN" 
-    phone_number: str = Field(..., description="Phone number to which OTP will be sent", example="919876543210")
+    country: str = Field(default="IN", description="ISO country code (IN, US, etc)")
+    phone_number: str = Field(
+        ...,
+        description="National phone number (without country code)",
+        example="9876543210"
+    )
 
     @field_validator("phone_number")
     def validate_phone_number(cls, value):
         if not value.isdigit():
             raise ValueError("Phone number must contain only digits")
-        if len(value) < 10 or len(value) > 15:
-            raise ValueError("Phone number must be between 10 and 15 digits")
         return value
-    
-    def __init__(self, **data):
-        super().__init__(**data)
-        first_digit = self.phone_number[0] if self.phone_number else None
-        if self.country == "IN" and first_digit not in ["9", "8", "7", "6"]:
-            raise ValueError("In India, phone numbers must start with 9, 8, 7, or 6")
 
-        if self.country == "IN" and not self.phone_number.startswith("91"):
-            self.phone_number = "91" + self.phone_number
+    @field_validator("country")
+    def validate_country(cls, value):
+        if len(value) != 2:
+            raise ValueError("Country must be ISO code like IN, US")
+        return value.upper()
+
+    def get_e164(self) -> str:
+        try:
+            parsed = phonenumbers.parse(self.phone_number, self.country)
+
+            if not phonenumbers.is_valid_number(parsed):
+                raise ValueError("Invalid phone number")
+
+            return phonenumbers.format_number(
+                parsed,
+                phonenumbers.PhoneNumberFormat.E164
+            )
+        except Exception:
+            raise ValueError("Invalid phone number format")
 
 
 class OtpRequest(AuthRequest):
     pass
-    
-   
+
+
 class OtpVerifyRequest(AuthRequest):
-    otp: str = Field(..., description="4-digit OTP sent to the user's phone", example="5689")
+    otp: str = Field(..., description="4-digit OTP", example="5689")
 
     @field_validator("otp")
     def validate_otp(cls, value):
@@ -36,7 +51,8 @@ class OtpVerifyRequest(AuthRequest):
         if len(value) != 4:
             raise ValueError("OTP must be exactly 4 digits")
         return value
-    
+
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"

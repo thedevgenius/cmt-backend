@@ -50,6 +50,7 @@ async def send_otp_msg91(phone: str) -> str:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Could not connect to the SMS gateway."
         )
+    print(f"After Sending {phone} {REQUEST_ID_STORE}")
     return data
 
 
@@ -88,11 +89,12 @@ async def resend_otp_msg91(phone: str) -> str:
 
 async def verify_otp_msg91(phone: str, otp: str) -> bool:
     """Checks the provided OTP against the in-memory store."""
-    
+    print(f"Before verifying{phone} {REQUEST_ID_STORE}")
+
     if phone not in REQUEST_ID_STORE:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid or expired OTP."
+            detail="Expired OTP."
         )
     
     url = "https://api.msg91.com/api/v5/widget/verifyOtp"
@@ -117,6 +119,7 @@ async def verify_otp_msg91(phone: str, otp: str) -> bool:
                     detail="Invalid or expired OTP."
                 )
             del REQUEST_ID_STORE[phone]
+            print(f"After verifying {phone} {REQUEST_ID_STORE}")
             return True
 
     except httpx.RequestError:

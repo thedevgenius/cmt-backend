@@ -16,20 +16,20 @@ router = APIRouter()
 
 @router.post("/otp/send")
 async def send_otp(otp_request: user_schemas.OtpRequest, db: AsyncSession = Depends(get_db)):
-    user = await auth_service.get_or_create_user(db, otp_request.phone_number)
+    user = await auth_service.get_or_create_user(db, otp_request.get_e164())
     print(f"OTP for {otp_request.get_e164()} is being sent to the user.")
-    await auth_service.send_otp_msg91(otp_request.phone_number)
+    await auth_service.send_otp_msg91(otp_request.get_e164())
     return {"message": "OTP sent successfully"}
 
 
 @router.post("/otp/verify", response_model=auth_schemas.TokenResponse)
 async def verify_otp(response: Response, otp_verify_request: user_schemas.OtpVerifyRequest, db: AsyncSession = Depends(get_db)):
-    is_valid = await auth_service.verify_otp_msg91(otp_verify_request.phone_number, otp_verify_request.otp)
+    is_valid = await auth_service.verify_otp_msg91(otp_verify_request.get_e164(), otp_verify_request.otp)
 
     if not is_valid:
         return {"message": "Invalid OTP"}
     
-    user = await user_crud.get_by_phone(db, phone=otp_verify_request.phone_number)
+    user = await user_crud.get_by_phone(db, phone=otp_verify_request.get_e164())
     update_data = {
         "is_verified": True,
         "last_login": datetime.now(timezone.utc)
@@ -57,11 +57,11 @@ async def verify_otp(response: Response, otp_verify_request: user_schemas.OtpVer
 
 @router.post("/otp/resend")
 async def resend_otp(otp_resend_request: user_schemas.OtpRequest, db: AsyncSession = Depends(get_db)):
-    user = await auth_service.get_or_create_user(db, otp_resend_request.phone_number)
+    user = await auth_service.get_or_create_user(db, otp_resend_request.get_e164())
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     
-    await auth_service.resend_otp_msg91(otp_resend_request.phone_number)
+    await auth_service.resend_otp_msg91(otp_resend_request.get_e164())
 
     return {"message": "OTP resent successfully"}
 

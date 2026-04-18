@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from app.db.session import AsyncSessionLocal
 from app.models.user import User, UserRole
 from app.core.jwt import get_password_hash
+from app.core.utils import format_phone
 
 async def create_super_admin():
     print("\n" + "="*40)
@@ -22,7 +23,7 @@ async def create_super_admin():
 
     # 3. Create the User object with elevated privileges
     admin_user = User(
-        phone=phone,
+        phone=format_phone(phone, "IN"),
         email=email,
         full_name=name,
         password=hashed_pw,

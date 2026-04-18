@@ -1,5 +1,4 @@
-import random, time, httpx
-from datetime import datetime, timezone
+import httpx
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -13,6 +12,7 @@ REQUEST_ID_STORE = {}
 
 async def get_or_create_user(db: AsyncSession, phone: str) -> User:
     """Fetches an existing user by phone, or creates a new unverified user."""
+
     result = await db.execute(select(User).where(User.phone == phone))
     user = result.scalars().first()
     

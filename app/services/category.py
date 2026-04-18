@@ -11,6 +11,35 @@ from app.crud.category import category_crud
 # ------------------------------------------------------------------
 
 
+async def create_category(category_in: category_schemas.CategoryCreate, db: AsyncSession):
+
+    query = select(Category).where(or_(Category.name == category_in.name, Category.slug == category_in.slug))
+    result = await db.execute(query)
+    existing_category = result.scalars().first()
+
+    if existing_category:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A category with this name or slug already exists."
+        )
+
+    # 2. Check if parent_id is valid (if provided)
+    if category_in.parent_id:
+        parent_result = await db.execute(select(Category).where(Category.id == category_in.parent_id))
+        if not parent_result.scalars().first():
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Parent category not found."
+            )
+
+    # 3. Create and save the new category
+    new_category = Category(**category_in.model_dump())
+    db.add(new_category)
+    await db.commit()
+    await db.refresh(new_category)
+
+    return new_category
+
 async def update_category(category_id: uuid.UUID, category_in: category_schemas.CategoryUpdate, db: AsyncSession):
     db_category = await category_crud.get(db, id=category_id)
 

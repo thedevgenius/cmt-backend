@@ -17,38 +17,14 @@ router = APIRouter()
 async def create_category(
     category_in: category_schemas.CategoryCreate,
     db: AsyncSession = Depends(get_db),
-    # Injecting this dependency automatically locks the route to admins/staff
     current_admin: User = Depends(get_current_admin) 
 ):
     """Create a new directory category. Requires Admin or Staff privileges."""
 
     # 1. Check if a category with this name or slug already exists
-    query = select(Category).where(or_(Category.name == category_in.name, Category.slug == category_in.slug))
-    result = await db.execute(query)
-    existing_category = result.scalars().first()
-
-    if existing_category:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="A category with this name or slug already exists."
-        )
-
-    # 2. Check if parent_id is valid (if provided)
-    if category_in.parent_id:
-        parent_result = await db.execute(select(Category).where(Category.id == category_in.parent_id))
-        if not parent_result.scalars().first():
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Parent category not found."
-            )
-
-    # 3. Create and save the new category
-    new_category = Category(**category_in.model_dump())
-    db.add(new_category)
-    await db.commit()
-    await db.refresh(new_category)
-
-    return new_category
+    category = await category_services.create_category(category_in, db)
+    
+    return category
 
 
 @router.patch("/{category_id}", response_model=category_schemas.CategoryResponse)

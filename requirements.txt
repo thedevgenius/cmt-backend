@@ -9,3 +9,4 @@ httpx
 PyJWT
 passlib[argon2]
 pydantic[email]
+phonenumbers

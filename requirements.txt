@@ -10,3 +10,4 @@ PyJWT
 passlib[argon2]
 pydantic[email]
 phonenumbers
+redis[hiredis]

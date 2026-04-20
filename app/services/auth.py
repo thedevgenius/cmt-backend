@@ -5,10 +5,10 @@ from sqlalchemy import select
 
 from app.models.user import User
 from app.core.config import settings
+from app.core.redis_client import redis_client
 from app.core import jwt as app_jwt
 from app.models.user import UserRole, User
 
-REQUEST_ID_STORE = {}
 
 async def get_or_create_user(db: AsyncSession, phone: str) -> User:
     """Fetches an existing user by phone, or creates a new unverified user."""
@@ -43,30 +43,39 @@ async def send_otp_msg91(phone: str) -> str:
             response = await client.post(url, json=payload, headers=headers)
             response.raise_for_status()
             data = response.json()
-            REQUEST_ID_STORE[phone] = data["message"]
+            
+            redis_otp_key = f"otp:{phone}"
+            await redis_client.set(
+                redis_otp_key,
+                data["message"],
+                ex=300
+            )
 
     except httpx.RequestError:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Could not connect to the SMS gateway."
         )
-    print(f"After Sending {phone} {REQUEST_ID_STORE}")
     return data
 
 
 async def resend_otp_msg91(phone: str) -> str:
     """Resends the OTP for the given phone number, enforcing a 30s rate limit and updating the in-memory store."""
 
-    if phone not in REQUEST_ID_STORE:
+    url = "https://api.msg91.com/api/v5/widget/retryOtp"
+
+    redis_otp_key = f"otp:{phone}"
+    req_id = await redis_client.get(redis_otp_key)
+
+    if not req_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="No existing OTP request found for this phone number."
-        ) 
-
-    url = "https://api.msg91.com/api/v5/widget/retryOtp"
+        )
+    
     payload = {
         "widgetId": settings.MSG_WIDGET_ID,
-        "reqId": REQUEST_ID_STORE[phone]
+        "reqId": req_id
     }
     headers = {
         "content-type": "application/json",
@@ -78,7 +87,13 @@ async def resend_otp_msg91(phone: str) -> str:
             response = await client.post(url, json=payload, headers=headers)
             response.raise_for_status()
             data = response.json()
-            REQUEST_ID_STORE[phone] = data["message"]
+
+            await redis_client.set(
+                redis_otp_key,
+                data["message"],
+                ex=300
+            )
+
     except httpx.RequestError:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -89,18 +104,21 @@ async def resend_otp_msg91(phone: str) -> str:
 
 async def verify_otp_msg91(phone: str, otp: str) -> bool:
     """Checks the provided OTP against the in-memory store."""
-    print(f"Before verifying{phone} {REQUEST_ID_STORE}")
-
-    if phone not in REQUEST_ID_STORE:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Expired OTP."
-        )
     
     url = "https://api.msg91.com/api/v5/widget/verifyOtp"
+
+    redis_otp_key = f"otp:{phone}"
+    redis_data = await redis_client.get(redis_otp_key)
+
+    if not redis_data:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired otp"
+        )
+
     payload = {
         "widgetId": settings.MSG_WIDGET_ID,
-        "reqId": REQUEST_ID_STORE[phone],
+        "reqId": redis_data,
         "otp": otp
     }
     headers = {
@@ -118,8 +136,8 @@ async def verify_otp_msg91(phone: str, otp: str) -> bool:
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Invalid or expired OTP."
                 )
-            del REQUEST_ID_STORE[phone]
-            print(f"After verifying {phone} {REQUEST_ID_STORE}")
+            await redis_client.delete(redis_otp_key)
+            print(redis_data)
             return True
 
     except httpx.RequestError:
@@ -129,10 +147,7 @@ async def verify_otp_msg91(phone: str, otp: str) -> bool:
         )
 
 
-async def refresh_access_token(
-    refresh_token: str, 
-    db: AsyncSession
-):
+async def refresh_access_token(refresh_token: str, db: AsyncSession):
     """Validates the refresh token, checks user status, and issues a new access token."""
     if not refresh_token:
         raise HTTPException(

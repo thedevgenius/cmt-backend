@@ -9,7 +9,7 @@ from app.db.session import AsyncSessionLocal
 from app.models.user import User, UserRole
 from app.core.jwt import verify_token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/otp/verify")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/otp/verify")
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:

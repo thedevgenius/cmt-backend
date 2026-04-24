@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.dependencies import get_current_user, get_db
 from app.models.user import User
 from app.schemas.user import UserUpdate, UserResponse
-from app.crud.user import user_crud
+from app.services.user import user_service
 
 router = APIRouter()
 
@@ -24,6 +24,6 @@ async def update_my_profile(
         "email": update_data.email,
     }
 
-    await user_crud.update(db, db_obj=current_user, obj_in=updated_data)
+    await user_service.update(db, db_obj=current_user, obj_in=updated_data)
 
     return current_user

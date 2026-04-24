@@ -68,9 +68,6 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 def get_password_hash(password: str) -> str:
     sha256_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    
-    print("RAW LEN:", len(password.encode()))
-    print("SHA256 LEN:", len(sha256_hash.encode()))
 
     return pwd_context.hash(sha256_hash)
 

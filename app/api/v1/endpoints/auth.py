@@ -4,38 +4,37 @@ from fastapi import APIRouter, Depends, Response, HTTPException, status, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas import auth as user_schemas
-from app.services import auth as auth_service
+from app.services.auth import AuthService
 from app.core.dependencies import get_db
 from app.core.jwt import create_access_token, create_refresh_token
 from app.core.config import settings
 from app.schemas import auth as auth_schemas
-from app.crud.user import user_crud
+from app.services.user import user_service
 
 
 router = APIRouter()
 
 @router.post("/otp/send")
 async def send_otp(otp_request: user_schemas.OtpRequest, db: AsyncSession = Depends(get_db)):
-    user = await auth_service.get_or_create_user(db, otp_request.get_e164())
-    print(f"OTP for {otp_request.get_e164()} is being sent to the user.")
-    await auth_service.send_otp_msg91(otp_request.get_e164())
+    user = await AuthService(db).get_or_create_user(otp_request.get_e164())
+    await AuthService(db).send_otp(otp_request.get_e164())
     return {"message": "OTP sent successfully"}
 
 
 @router.post("/otp/verify", response_model=auth_schemas.TokenResponse)
 async def verify_otp(response: Response, otp_verify_request: user_schemas.OtpVerifyRequest, db: AsyncSession = Depends(get_db)):
-    is_valid = await auth_service.verify_otp_msg91(otp_verify_request.get_e164(), otp_verify_request.otp)
+    is_valid = await AuthService(db).verify_otp(otp_verify_request.get_e164(), otp_verify_request.otp)
 
     if not is_valid:
         return {"message": "Invalid OTP"}
     
-    user = await user_crud.get_by_phone(db, phone=otp_verify_request.get_e164())
+    user = await user_service.get_by_phone(db, phone=otp_verify_request.get_e164())
     update_data = {
         "is_verified": True,
         "last_login": datetime.now(timezone.utc)
     }
 
-    await user_crud.update(db, db_obj=user, obj_in=update_data)
+    await user_service.update(db, db_obj=user, obj_in=update_data)
 
     access_token = create_access_token(subject=user.id)
     refresh_token = create_refresh_token(subject=user.id)
@@ -57,11 +56,11 @@ async def verify_otp(response: Response, otp_verify_request: user_schemas.OtpVer
 
 @router.post("/otp/resend")
 async def resend_otp(otp_resend_request: user_schemas.OtpRequest, db: AsyncSession = Depends(get_db)):
-    user = await auth_service.get_or_create_user(db, otp_resend_request.get_e164())
+    user = await AuthService(db).get_or_create_user(otp_resend_request.get_e164())
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     
-    await auth_service.resend_otp_msg91(otp_resend_request.get_e164())
+    await AuthService(db).resend_otp(otp_resend_request.get_e164())
 
     return {"message": "OTP resent successfully"}
 
@@ -69,7 +68,7 @@ async def resend_otp(otp_resend_request: user_schemas.OtpRequest, db: AsyncSessi
 @router.post("/refresh", response_model=auth_schemas.TokenResponse)
 async def refresh_access_token(refresh_token: str | None = Cookie(default=None), db: AsyncSession = Depends(get_db)):
 
-    new_access_token = await auth_service.refresh_access_token(refresh_token, db)
+    new_access_token = await AuthService(db).refresh_access_token(refresh_token, db)
     
     return {
         "access_token": new_access_token,
@@ -86,7 +85,7 @@ async def admin_login(
     """
     Direct Admin/Staff login: Verifies credentials and issues JWTs immediately.
     """
-    user = await auth_service.get_admin(db, request.email, request.password)
+    user = await AuthService(db).get_admin(request.email, request.password)
 
     user.last_login = datetime.now(timezone.utc)
     await db.commit()

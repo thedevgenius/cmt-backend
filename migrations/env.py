@@ -7,6 +7,8 @@ import asyncio
 
 from app.models.user import User  # Import your models here
 from app.models.category import Category
+from app.models.address import State, City
+from app.models.business import Business
 
 config = context.config
 fileConfig(config.config_file_name)

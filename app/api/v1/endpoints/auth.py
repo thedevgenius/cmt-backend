@@ -68,7 +68,7 @@ async def resend_otp(otp_resend_request: user_schemas.OtpRequest, db: AsyncSessi
 @router.post("/refresh", response_model=auth_schemas.TokenResponse)
 async def refresh_access_token(refresh_token: str | None = Cookie(default=None), db: AsyncSession = Depends(get_db)):
 
-    new_access_token = await AuthService(db).refresh_access_token(refresh_token, db)
+    new_access_token = await AuthService(db).refresh_access_token(refresh_token)
     
     return {
         "access_token": new_access_token,

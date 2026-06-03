@@ -28,7 +28,6 @@ class User(AbstractUser, PermissionsMixin):
 
     # Define the unique identifier for authentication
     USERNAME_FIELD = 'phone'
-    # Fields required when using `createsuperuser` via command line
     REQUIRED_FIELDS = ['full_name']
 
     def __str__(self):

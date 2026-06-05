@@ -9,12 +9,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://comynity.com",
-    "http://10.74.154.149:3000"
+    "http://10.74.154.149:3000",
+    "http://192.168.0.82:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "https://comynity.com",
-    "http://10.74.154.149:3000"
+    "http://10.74.154.149:3000",
+    "http://192.168.0.82:3000"
 ]

@@ -1,5 +1,6 @@
 from django.db import models
 from core.utils import generate_unique_slug
+import pygeohash as pgh
 # Create your models here.
 class State(models.Model):
     name = models.CharField(max_length=100)
@@ -25,7 +26,6 @@ class City(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     pincode_prefix = models.CharField(max_length=100, blank=True, null=True)
-    
     
     def __str__(self):
         return self.name

@@ -3,6 +3,7 @@ from django.conf import settings
 from rest_framework import status
 from .models import City
 
+
 def get_city_details_from_postal_code(postal_code: str) -> dict | None:
     """Return matching city details based on postal code prefix."""
 
@@ -21,7 +22,6 @@ def get_city_details_from_postal_code(postal_code: str) -> dict | None:
 
         if any(postal_code.startswith(str(prefix)) for prefix in prefixes if prefix):
             return {
-                "id": city.id,
                 "name": getattr(city, "name", "Unknown"),
                 "slug": city.slug,
             }
@@ -29,87 +29,163 @@ def get_city_details_from_postal_code(postal_code: str) -> dict | None:
     return None
 
 
-def get_reverse_geocode(lat: float, lng: float) -> dict:
-    """Fetches and formats address components from Google Maps API."""
-    
-    if not getattr(settings, 'GOOGLE_MAPS_API_KEY', None):
-        return {
-            "success": False,
-            "error": "Google Maps API key is not configured.",
-            "status": status.HTTP_500_INTERNAL_SERVER_ERROR
-        }
+def extract_best_landmark(address_dict):
+    """
+    Extracts the most specific location identifier from a Nominatim address dictionary.
+    Falls back to broader regions if the specific local tags are missing.
+    """
+    if not address_dict:
+        return None
 
-    url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lng}&key={settings.GOOGLE_MAPS_API_KEY}"
-
-    try:
-        response = requests.get(url, timeout=5.0)
-        response.raise_for_status()
-        data = response.json()
-    except requests.exceptions.RequestException:
-        return {
-            "success": False,
-            "error": "Failed to connect to the Geocoding service.",
-            "status": status.HTTP_503_SERVICE_UNAVAILABLE
-        }
-
-    if not data.get("results"):
-        return {
-            "success": False,
-            "error": "No location data found for these coordinates.",
-            "status": status.HTTP_404_NOT_FOUND
-        }
-
-    components = data["results"][0].get("address_components", [])
-    
-    comp_dict = {}
-    for comp in components:
-        for comp_type in comp["types"]:
-            if comp_type not in comp_dict: 
-                comp_dict[comp_type] = comp["long_name"]
-
-    desired_order = [
-        # "sublocality_level_3",
-        # "sublocality_level_2",        
-        "sublocality_level_1",         
-        "locality",                    
-        "administrative_area_level_3", 
-        "administrative_area_level_1", 
-        # "postal_code",                 
-        # "country"                      
+    # Ordered from most specific (local) to least specific (regional)
+    # Note: Added 'neighbourhood', 'village', and 'city' as OSM frequently 
+    # uses these depending on population density.
+    hierarchy = [
+        'suburb',
+        'neighbourhood',
+        'village',
+        'town',
+        'city',
+        'municipality',
+        'county',
+        'state_district'
     ]
 
-    # Only one of the desired parts should be present
-    # display_name = ""
-    # for t in desired_order:
-    #     if t in comp_dict:
-    #         display_name = comp_dict[t]
-    #         break  # Stop looking once we find the first available part
+    for key in hierarchy:
+        landmark = address_dict.get(key)
+        if landmark:
+            return landmark
 
-    parts = []
-    for t in desired_order:
-        if t in comp_dict:
-            val = comp_dict[t]
-            if val not in parts:
-                parts.append(val)
+    # Absolute fallback if somehow none of the above exist
+    return address_dict.get('state', 'Unknown Location')
 
-    display_name = ", ".join(parts)
 
-    if not display_name:
-        display_name = data["results"][0].get("formatted_address", "")
-
-    postal_code = comp_dict.get("postal_code")
-
-    city_details = get_city_details_from_postal_code(postal_code)
-
-    return {
-        "success": True,
-        "data": {
-            "display_name": display_name,
-            "postal_code": postal_code,
-            "city": city_details
-        },
-        "status": status.HTTP_200_OK
+def get_city_by_lat_lng(lat: float, lng: float) -> dict | None:
+    """Fetches city details based on latitude and longitude using Nominatim."""
+    url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lng}&zoom=14&format=json"
+    headers = {
+        'User-Agent': 'Comynity/1.0'
     }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+        address_dict = data.get('address', {})
+        postal_code = address_dict.get('postcode')
+        if not postal_code:
+            city = address_dict.get('city') or address_dict.get('state_district')
+            if city:
+                return {"name": city, "slug": city.lower().replace(" ", "-")}
+            else:
+                return None
+        return get_city_details_from_postal_code(postal_code)
+
+    except requests.exceptions.RequestException:
+        return None
+
+
+def get_reverse_geocode(lat: float, lng: float, provider: str = "google") -> dict:  
+    """Fetches and formats address components from Google Maps API."""
+    provider = provider.lower()
+
+    if provider == "google":
+        if not getattr(settings, 'GOOGLE_MAPS_API_KEY', None):
+            return {
+                "success": False,
+                "error": "Google Maps API key is not configured.",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR
+            }
+
+        url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lng}&key={settings.GOOGLE_MAPS_API_KEY}"
+
+        try:
+            response = requests.get(url, timeout=5.0)
+            response.raise_for_status()
+            data = response.json()
+        except requests.exceptions.RequestException:
+            return {
+                "success": False,
+                "error": "Failed to connect to the Geocoding service.",
+                "status": status.HTTP_503_SERVICE_UNAVAILABLE
+            }
+
+        if not data.get("results"):
+            return {
+                "success": False,
+                "error": "No location data found for these coordinates.",
+                "status": status.HTTP_404_NOT_FOUND
+            }
+
+        components = data["results"][0].get("address_components", [])
+        
+        comp_dict = {}
+        for comp in components:
+            for comp_type in comp["types"]:
+                if comp_type not in comp_dict: 
+                    comp_dict[comp_type] = comp["long_name"]
+
+        desired_order = [
+            # "sublocality_level_3",
+            # "sublocality_level_2", 
+            "sublocality_level_1",         
+            "locality",                    
+            "administrative_area_level_3", 
+            "administrative_area_level_1",                   
+        ]
+
+        # Only one of the desired parts should be present
+        display_name = ""
+        for t in desired_order:
+            if t in comp_dict:
+                display_name = comp_dict[t]
+                break
+
+        if not display_name:
+            display_name = data["results"][0].get("formatted_address", "")
+        
+        city_details = get_city_by_lat_lng(lat, lng)
+
+        return {
+            "success": True,
+            "data": {
+                "landmark": display_name,
+                "city": city_details
+            },
+            "status": status.HTTP_200_OK
+        }
+
+    if provider == "nominatim":
+        # Implement Nominatim reverse geocoding logic here if needed
+        headers = {
+            'User-Agent': 'Comynity/1.0'
+        }
+        url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lng}&zoom=14&format=json"
+
+        try:
+            # 2. Make the HTTP Request
+            response = requests.get(url, headers=headers, timeout=5)
+            response.raise_for_status()
+
+            data = response.json()
+            address_dict = data.get('address', {})
+
+            # 3. Apply your fallback logic
+            best_landmark = extract_best_landmark(address_dict)
+            postal_code = address_dict.get('postcode')
+
+            return {
+                "success": True,
+                "landmark": best_landmark,
+                "status": status.HTTP_200_OK
+            }
+
+        except requests.exceptions.RequestException as e:
+            return {
+                "success": False,
+                "error": f"Geocoding request failed: {str(e)}",
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR
+            }
 
 
 def get_location_autocomplete(q: str) -> dict:
@@ -217,14 +293,13 @@ def get_place_coordinates(place_id: str) -> dict:
             break
 
     # --- NEW: Match Postal Code to City ---
-    city_details = get_city_details_from_postal_code(postal_code)
+    city_details = get_city_by_lat_lng(location["lat"], location["lng"])
 
     return {
         "success": True,
         "data": {
             "lat": location["lat"],
             "lng": location["lng"],
-            "postal_code": postal_code,
             "city": city_details
         },
         "status": status.HTTP_200_OK

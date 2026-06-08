@@ -24,3 +24,17 @@ class CategoryRootSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'slug', 'children']
+
+ 
+class CategoryListSerializer(serializers.ModelSerializer):
+    # Optional: include the parent's name for easier frontend debugging/display
+    parent_name = serializers.CharField(source='parent.name', read_only=True)
+
+    class Meta:
+        model = Category
+        fields = [
+            'id', 'name', 'slug', 'description', 
+            'parent', 'parent_name', 
+            'is_active', 'is_featured', 'sort_order', 
+            'meta_title'
+        ]

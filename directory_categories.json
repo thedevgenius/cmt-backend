@@ -1,0 +1,328 @@
+{
+  "version": "1.0",
+  "total_parents": 25,
+  "categories": [
+    {
+      "id": 1,
+      "name": "Food & Dining",
+      "icon": "ti-building-store",
+      "children": [
+        { "name": "Restaurants", "subcategories": ["North Indian","South Indian","Chinese","Continental","Italian","Japanese","Mexican","Thai","Mediterranean","Street Food","Seafood","Vegan & Vegetarian","Fast Food","Buffet","Fine Dining","Rooftop Dining"] },
+        { "name": "Cafes & Bakeries", "subcategories": ["Coffee Shops","Tea Houses","Patisseries","Dessert Cafes","Juice Bars","Ice Cream Parlours","Cake Shops","Sandwich Bars"] },
+        { "name": "Takeaway & Delivery", "subcategories": ["Tiffin Services","Cloud Kitchens","Meal Prep","Food Trucks","Catering Boxes"] },
+        { "name": "Catering & Events", "subcategories": ["Wedding Catering","Corporate Catering","Birthday Parties","Outdoor Catering","Buffet Catering"] },
+        { "name": "Bars & Nightlife", "subcategories": ["Sports Bars","Cocktail Lounges","Pubs","Wine Bars","Nightclubs","Hookah Lounges"] }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Home Services",
+      "icon": "ti-tools",
+      "children": [
+        { "name": "Repairs & Maintenance", "subcategories": ["Plumbing","Electrical","Carpentry","Masonry","Painting","Waterproofing","Roofing","Flooring","Tiling","Welding","Pest Control"] },
+        { "name": "Cleaning Services", "subcategories": ["Deep Cleaning","Sofa & Carpet Cleaning","Kitchen Cleaning","Bathroom Sanitization","Water Tank Cleaning","Post-Construction Cleaning","Window Cleaning"] },
+        { "name": "Interior & Decor", "subcategories": ["Interior Design","False Ceiling","Wallpaper & Wall Art","Modular Kitchen","Wardrobe & Storage","Curtains & Blinds","Lighting Design"] },
+        { "name": "Appliance Services", "subcategories": ["AC Repair & Service","Refrigerator Repair","Washing Machine Repair","TV & Electronics Repair","Water Purifier Service","Microwave Repair"] },
+        { "name": "Movers & Packers", "subcategories": ["Local Shifting","Intercity Shifting","Vehicle Transport","Storage & Warehousing","Office Relocation"] },
+        { "name": "Smart Home", "subcategories": ["Home Automation","CCTV Installation","Intercom Systems","Solar Panel Installation","Inverter & Battery"] }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Health & Wellness",
+      "icon": "ti-heart-rate-monitor",
+      "children": [
+        { "name": "Doctors & Clinics", "subcategories": ["General Physician","Paediatrician","Gynaecologist","Cardiologist","Orthopaedic","Dermatologist","ENT Specialist","Neurologist","Psychiatrist","Ophthalmologist","Urologist","Diabetologist"] },
+        { "name": "Diagnostic Labs", "subcategories": ["Blood Tests","X-Ray & MRI","Ultrasound","ECG","COVID Testing","Full Body Checkup","Pathology"] },
+        { "name": "Hospitals", "subcategories": ["Multi-Speciality Hospitals","Maternity Hospitals","Eye Hospitals","Dental Hospitals","Ayurvedic Hospitals"] },
+        { "name": "Pharmacies", "subcategories": ["General Pharmacy","24-Hour Pharmacy","Online Pharmacy","Homeopathic Store","Herbal & Ayurvedic Store"] },
+        { "name": "Fitness & Yoga", "subcategories": ["Gym & Fitness Centre","Yoga Studio","Zumba Classes","CrossFit","Pilates","Martial Arts","Swimming Pool"] },
+        { "name": "Mental Health", "subcategories": ["Psychologist","Counsellor","Therapist","Meditation Centre","De-Addiction Centre"] },
+        { "name": "Alternative Therapy", "subcategories": ["Physiotherapy","Homeopathy","Ayurveda","Acupuncture","Naturopathy","Chiropractor"] }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Professional Services",
+      "icon": "ti-building-bank",
+      "children": [
+        { "name": "Legal Services", "subcategories": ["Lawyers & Advocates","Notary Services","Document Registration","Divorce & Family Law","Property Law","Criminal Law","Consumer Forum"] },
+        { "name": "Financial Services", "subcategories": ["Chartered Accountant","Tax Consultant","GST Filing","Loan Advisory","Insurance Agents","Investment Advisors","Auditors"] },
+        { "name": "Business Services", "subcategories": ["Company Registration","Trademark & IP","Business Consulting","HR & Recruitment","Payroll Services","Virtual Office"] },
+        { "name": "IT & Tech Services", "subcategories": ["Software Development","Website Design","App Development","SEO & Digital Marketing","IT Support","Data Recovery","Cybersecurity"] },
+        { "name": "Government & Compliance", "subcategories": ["FSSAI Registration","Shop Act Licence","Trade Licence","Import-Export Code","Labour Law Compliance"] }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Education & Learning",
+      "icon": "ti-school",
+      "children": [
+        { "name": "Schools & Colleges", "subcategories": ["Preschool & Nursery","Primary School","Secondary School","Junior College","Degree College","International Schools"] },
+        { "name": "Coaching & Tuition", "subcategories": ["JEE/NEET Coaching","Board Exam Tuition","Mathematics","Science","English","Commerce Tuition","Spoken English"] },
+        { "name": "Skill Development", "subcategories": ["Computer Classes","Coding Bootcamp","Data Science","Graphic Design","Photography","Video Editing","Typing Institute"] },
+        { "name": "Arts & Cultural", "subcategories": ["Music Classes","Dance Academy","Drawing & Painting","Drama & Theatre","Singing Classes"] },
+        { "name": "Sports Coaching", "subcategories": ["Cricket Academy","Football Training","Badminton Academy","Swimming Classes","Chess Coaching","Athletics"] },
+        { "name": "Language Institutes", "subcategories": ["English Language","French","German","Spanish","Japanese","Hindi","Tamil","Sanskrit"] }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Beauty & Personal Care",
+      "icon": "ti-sparkles",
+      "children": [
+        { "name": "Salons & Spas", "subcategories": ["Unisex Salon","Ladies Beauty Parlour","Gents Saloon","Bridal Studio","Nail Art Studio","Spa & Massage","Tan Removal"] },
+        { "name": "Hair Services", "subcategories": ["Haircut & Styling","Colour & Highlights","Hair Spa","Keratin Treatment","Hair Extensions","Hair Transplant Clinic"] },
+        { "name": "Skin Care", "subcategories": ["Dermatology Clinic","Facial & Cleanup","Waxing & Threading","Laser Treatment","Acne Treatment","Anti-Ageing"] },
+        { "name": "Wellness & Body", "subcategories": ["Massage Therapy","Aromatherapy","Body Scrub","Slimming Centre","Sauna & Steam"] },
+        { "name": "Tattoo & Piercing", "subcategories": ["Tattoo Studio","Piercing Studio","Permanent Makeup","Microblading"] }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Automotive",
+      "icon": "ti-car",
+      "children": [
+        { "name": "Vehicle Repair", "subcategories": ["Car Service Centre","Bike Repair","Dent & Paint","Tyre Shop","Battery Replacement","AC Repair","Car Wash","Detailing"] },
+        { "name": "Spare Parts", "subcategories": ["Car Parts","Bike Parts","Tyre & Rims","Lubricants","Accessories"] },
+        { "name": "Driving & Rentals", "subcategories": ["Driving School","Car Rental","Bike Rental","Cab Services","Truck & Tempo Rental"] },
+        { "name": "EV Services", "subcategories": ["EV Charging Station","EV Repair","EV Battery Service","Electric Bike Shop"] },
+        { "name": "Buy & Sell Vehicles", "subcategories": ["Used Cars","Used Bikes","Vehicle Showroom","Auto Auction"] }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Real Estate & Property",
+      "icon": "ti-building",
+      "children": [
+        { "name": "Residential", "subcategories": ["Apartments","Independent Houses","Villas","PG & Hostel","Co-living Spaces","Plots & Land"] },
+        { "name": "Commercial", "subcategories": ["Office Space","Co-working Space","Retail Shops","Showrooms","Warehouses","Industrial Sheds"] },
+        { "name": "Property Services", "subcategories": ["Real Estate Agents","Property Management","Vastu Consultants","Rental Management","Property Legal Services"] },
+        { "name": "Construction", "subcategories": ["Architects","Civil Contractors","Building Material Suppliers","Steel & TMT","Sand & Aggregate","Ready Mix Concrete"] }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Fashion & Apparel",
+      "icon": "ti-shirt-sport",
+      "children": [
+        { "name": "Clothing Stores", "subcategories": ["Men's Wear","Women's Wear","Kids' Wear","Ethnic Wear","Sportswear","Formal Wear","Casual Wear"] },
+        { "name": "Accessories", "subcategories": ["Footwear","Bags & Handbags","Watches","Sunglasses","Belts & Wallets","Scarves & Stoles"] },
+        { "name": "Jewellery", "subcategories": ["Gold Jewellery","Diamond Jewellery","Silver Jewellery","Artificial Jewellery","Gemstones","Watch & Jewellery Repair"] },
+        { "name": "Tailoring & Alterations", "subcategories": ["Boutique & Stitching","Alterations","Embroidery","Screen Printing","Uniform Stitching"] }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Retail & Shopping",
+      "icon": "ti-shopping-bag",
+      "children": [
+        { "name": "Grocery & Supermarket", "subcategories": ["General Store","Supermarket","Organic Store","Fruits & Vegetables","Dairy Products","Dry Fruits & Nuts"] },
+        { "name": "Electronics", "subcategories": ["Mobile Phones","Laptops & Computers","Home Appliances","Cameras","Gadgets & Accessories","Mobile Repair"] },
+        { "name": "Home & Furniture", "subcategories": ["Furniture Store","Home Decor","Bed & Bath","Kitchen Ware","Garden & Outdoor","Crockery & Glassware"] },
+        { "name": "Books & Stationery", "subcategories": ["Bookstore","Library","Stationery Shop","Art Supplies","Printing & Xerox"] },
+        { "name": "Sports & Outdoors", "subcategories": ["Sports Equipment","Camping Gear","Cycling Store","Fitness Equipment","Outdoor Clothing"] },
+        { "name": "Pet Supplies", "subcategories": ["Pet Food","Pet Grooming","Veterinary Clinic","Pet Accessories","Pet Boarding"] }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Events & Entertainment",
+      "icon": "ti-camera",
+      "children": [
+        { "name": "Event Management", "subcategories": ["Wedding Planner","Birthday Events","Corporate Events","Theme Parties","Exhibition & Expo","Product Launch"] },
+        { "name": "Photography & Video", "subcategories": ["Wedding Photography","Portrait Studio","Product Photography","Drone Videography","Photo Editing","Video Production"] },
+        { "name": "Decoration", "subcategories": ["Flower Decoration","Balloon Decoration","Stage & Pandal Setup","Tent & Canopy","LED & Lighting"] },
+        { "name": "Entertainment", "subcategories": ["DJ Services","Live Band","Anchor & MC","Magician","Dance Troupe","Comedy Show"] },
+        { "name": "Venues", "subcategories": ["Banquet Hall","Farmhouse","Conference Hall","Open Air Venue","Wedding Garden","Rooftop Venue"] },
+        { "name": "Rentals for Events", "subcategories": ["Sound System Rental","Projector Rental","Furniture Rental","Uniform & Costume Rental"] }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Travel & Tourism",
+      "icon": "ti-plane",
+      "children": [
+        { "name": "Travel Agencies", "subcategories": ["Tour Packages","Honeymoon Tours","Pilgrimage Tours","Adventure Tours","Group Tours","Customised Holidays"] },
+        { "name": "Hotels & Stays", "subcategories": ["Budget Hotels","Business Hotels","Luxury Resorts","Homestay","Heritage Hotels","Eco-Lodges"] },
+        { "name": "Transport", "subcategories": ["Bus Booking","Train Enquiry","Car Hire","Airport Transfer","Tempo Traveller","Cruise Booking"] },
+        { "name": "Visa & Documentation", "subcategories": ["Visa Assistance","Passport Services","Travel Insurance","Foreign Exchange"] },
+        { "name": "Local Experiences", "subcategories": ["City Tours","Heritage Walks","Adventure Sports","Camping & Trekking","Food Tours"] }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Media & Communication",
+      "icon": "ti-device-tv",
+      "children": [
+        { "name": "Print & Publishing", "subcategories": ["Newspapers","Magazines","Book Publishers","Printing Press","Offset Printing","Flex & Banner Printing"] },
+        { "name": "Digital Media", "subcategories": ["Digital Marketing Agency","Social Media Management","Content Writing","Email Marketing","Influencer Marketing"] },
+        { "name": "Telecom & Internet", "subcategories": ["Broadband Provider","Mobile Recharge","DTH Services","IP Camera","Networking Solutions"] }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Agriculture & Farming",
+      "icon": "ti-seedling",
+      "children": [
+        { "name": "Farm Supplies", "subcategories": ["Seeds & Saplings","Fertilizers","Pesticides","Farming Equipment","Irrigation Systems","Organic Inputs"] },
+        { "name": "Agri Services", "subcategories": ["Soil Testing","Crop Advisory","Land Levelling","Harvesting Services","Cold Storage","Agricultural Loans"] },
+        { "name": "Dairy & Livestock", "subcategories": ["Dairy Farm","Poultry Farm","Animal Feed","Veterinary Services","Cattle Equipment"] },
+        { "name": "Agri Products", "subcategories": ["Wholesale Grains","Pulses & Legumes","Spices","Oil Seeds","Fruits & Vegetables Wholesale"] }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Industrial & Manufacturing",
+      "icon": "ti-layers",
+      "children": [
+        { "name": "Manufacturing", "subcategories": ["Textile Mills","Food Processing","Chemical Manufacturing","Plastic Products","Metal Fabrication","Paper & Packaging"] },
+        { "name": "Industrial Supplies", "subcategories": ["Raw Materials","Industrial Tools","Safety Equipment","Industrial Chemicals","Electrical Supplies"] },
+        { "name": "Engineering", "subcategories": ["Mechanical Engineering","Civil Engineering","Electrical Engineering","Environmental Engineering","Automation & Robotics"] },
+        { "name": "Waste Management", "subcategories": ["Garbage Collection","Recycling Services","E-Waste Disposal","Composting","Industrial Waste Treatment"] }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Social & Community",
+      "icon": "ti-hand-holding-heart",
+      "children": [
+        { "name": "NGOs & Charities", "subcategories": ["Child Welfare","Women Empowerment","Senior Citizens","Education NGOs","Environmental NGOs","Disaster Relief"] },
+        { "name": "Religious Places", "subcategories": ["Temple","Mosque","Church","Gurudwara","Buddhist Monastery","Community Prayer Hall"] },
+        { "name": "Government & Public Services", "subcategories": ["Municipal Corporation","Panchayat Office","Police Station","Post Office","Ration Shop","Employment Office"] },
+        { "name": "Community Centres", "subcategories": ["Library","Sports Complex","Park","Community Hall","Co-operative Society","Residents Welfare Association"] }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Daily Needs",
+      "icon": "ti-basket",
+      "children": [
+        { "name": "Milk & Dairy Delivery", "subcategories": ["Milk Subscription","Curd & Paneer","Butter & Ghee","Cheese","Eggs Delivery","Lassi & Buttermilk"] },
+        { "name": "Water & Gas", "subcategories": ["Water Can Delivery","Packaged Drinking Water","LPG Cylinder Booking","Piped Gas Services","Water Purifier Rental"] },
+        { "name": "Domestic Help", "subcategories": ["Maid Services","Cook & Chef","Baby Sitter","Elder Care","Driver On-Call","Gardener","Security Guard (Residential)"] },
+        { "name": "Laundry & Clothing Care", "subcategories": ["Dhobi & Laundry","Dry Cleaning","Ironing Services","Shoe Cleaning","Carpet Cleaning"] },
+        { "name": "Newspaper & Essentials", "subcategories": ["Newspaper Subscription","Magazine Delivery","Medical Consumables","Stationery Delivery","Tiffin Subscription"] },
+        { "name": "Repair On-Call", "subcategories": ["Cobbler / Shoe Repair","Knife & Scissor Sharpening","Umbrella Repair","Cycle Repair","Small Appliance Fix"] }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "IT, Electronics & Technology",
+      "icon": "ti-device-laptop",
+      "children": [
+        { "name": "Hardware & Devices", "subcategories": ["Desktop & Workstations","Laptops & Notebooks","Servers & NAS","Networking Devices","Printers & Scanners","UPS & Power Backup","Projectors & Displays"] },
+        { "name": "Software & Licensing", "subcategories": ["ERP Solutions","CRM Software","Accounting Software","POS Systems","Antivirus & Security","Microsoft & Adobe Licensing","Custom Software"] },
+        { "name": "IT Support & AMC", "subcategories": ["Annual Maintenance Contract","On-Site IT Support","Remote Support","Network Setup","Server Management","IT Helpdesk"] },
+        { "name": "Web & App Development", "subcategories": ["Website Design","E-Commerce Development","Mobile App Development","UI/UX Design","CMS Development","API Integration"] },
+        { "name": "Cloud & Hosting", "subcategories": ["Web Hosting","Cloud Server","Domain Registration","Email Hosting","CDN Services","Backup Solutions"] },
+        { "name": "Digital Marketing", "subcategories": ["SEO Services","Google Ads","Social Media Marketing","Content Marketing","Email Campaigns","Online Reputation Management"] },
+        { "name": "Electronics Repair", "subcategories": ["Mobile Repair","Laptop Repair","Tablet Repair","Printer Repair","Smart TV Repair","Gaming Console Repair"] },
+        { "name": "Telecom & Connectivity", "subcategories": ["Broadband Internet","Leased Line","MPLS Network","VoIP Solutions","SIM & Mobile Plans","Fiber Optic Installation"] }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Contractors",
+      "icon": "ti-helmet",
+      "children": [
+        { "name": "Civil & Construction", "subcategories": ["Building Construction","Road & Pavement","Bridge & Infrastructure","Dam & Canal","Retaining Walls","Foundation & Piling"] },
+        { "name": "Electrical Contractors", "subcategories": ["Industrial Wiring","High Tension Lines","Substation Setup","Solar EPC","Street Lighting","DG Set Installation"] },
+        { "name": "Plumbing & Sanitation", "subcategories": ["Water Supply Lines","Sewage & Drainage","ETP & STP Plants","Rainwater Harvesting","Borewell Drilling"] },
+        { "name": "Interior Fit-Out", "subcategories": ["Office Fit-Out","Retail Store Fit-Out","Hospital Interior","False Ceiling Contractor","Glass & Aluminium Partition"] },
+        { "name": "Government Project Contractors", "subcategories": ["PWD Empanelled","Municipal Contractor","CPWD Registered","Defence Contractor","Railway Contractor"] },
+        { "name": "Turnkey & EPC", "subcategories": ["Turnkey Projects","EPC Contractor","PMC Services","BOT Projects","Design-Build Contractor"] },
+        { "name": "Specialised Contractors", "subcategories": ["Waterproofing Contractor","Painting Contractor","Landscaping Contractor","Fire Fighting Contractor","HVAC Contractor","Lift & Escalator Contractor"] }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "B2B Wholesalers",
+      "icon": "ti-building-factory",
+      "children": [
+        { "name": "FMCG & Grocery Wholesale", "subcategories": ["Packaged Foods","Beverages","Personal Care Products","Household Goods","Tobacco & Pan","Snacks & Confectionery"] },
+        { "name": "Raw Materials", "subcategories": ["Steel & Iron","Cement & Aggregates","Timber & Plywood","Chemicals","Plastics & Polymers","Textile Yarn & Fabric"] },
+        { "name": "Industrial Goods", "subcategories": ["Machinery Parts","Tools & Hardware","Bearings & Fasteners","Electrical Components","Safety Equipment","Packaging Materials"] },
+        { "name": "Agriculture Wholesale", "subcategories": ["Grains & Pulses","Spices & Condiments","Edible Oils","Fruits & Vegetables (Bulk)","Tea & Coffee","Seeds & Fertilizers"] },
+        { "name": "Pharma & Medical Wholesale", "subcategories": ["Pharmaceutical Distributors","Medical Devices","Surgical Supplies","Hospital Consumables","Nutraceuticals"] },
+        { "name": "Textile & Garment Wholesale", "subcategories": ["Fabric Wholesale","Readymade Garments","Uniforms","Hosiery & Knitwear","Handicrafts & Ethnic","Sarees & Dress Material"] },
+        { "name": "Import & Export Traders", "subcategories": ["Customs Clearing Agent","Import Agents","Export Houses","Trade Documentation","Freight Forwarding","Indenting Agents"] },
+        { "name": "Distribution & Dealership", "subcategories": ["Brand Distributor","Super Stockist","C&F Agent","Franchisee Network","Last-Mile Distribution"] }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Logistics & Transport",
+      "icon": "ti-truck",
+      "children": [
+        { "name": "Road Transport", "subcategories": ["Full Truck Load (FTL)","Less Than Truck Load (LTL)","Mini Truck & Tempo","Container Transport","Tipper & Dumper","Tanker Transport"] },
+        { "name": "Courier & Parcel", "subcategories": ["Same-Day Delivery","Next-Day Delivery","Hyperlocal Delivery","International Courier","Document Courier","Bulk Parcel"] },
+        { "name": "Packers & Movers", "subcategories": ["Household Shifting","Office Relocation","Vehicle Transport","Pet Relocation","Fragile & Fine Art Moving","Intercity Shifting"] },
+        { "name": "Warehousing & Storage", "subcategories": ["General Warehousing","Cold Storage","Bonded Warehouse","Fulfilment Centre","Self-Storage Units","Hazardous Goods Storage"] },
+        { "name": "Freight & Cargo", "subcategories": ["Air Freight","Sea Freight","Rail Freight","Multi-Modal Logistics","Project Cargo","Break-Bulk Cargo"] },
+        { "name": "Last-Mile & Delivery", "subcategories": ["E-Commerce Fulfilment","B2B Delivery","Food & Grocery Delivery Fleet","On-Demand Delivery","Returns Management"] },
+        { "name": "Supply Chain Services", "subcategories": ["3PL Services","4PL Services","Inventory Management","Cross-Docking","Reverse Logistics","Track & Trace Solutions"] },
+        { "name": "Passenger Transport", "subcategories": ["City Bus Services","School Van & Bus","Employee Transport","Airport Transfer","Outstation Cab","Tempo Traveller Hire"] }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Sports & Fitness",
+      "icon": "ti-ball-football",
+      "children": [
+        { "name": "Gyms & Fitness Centres", "subcategories": ["Weight Training Gym","CrossFit Box","Functional Training","Women-Only Gym","24-Hour Gym","Home Gym Setup"] },
+        { "name": "Yoga & Mindfulness", "subcategories": ["Hatha Yoga","Power Yoga","Aerial Yoga","Meditation Centre","Pranayama Classes","Online Yoga"] },
+        { "name": "Sports Academies", "subcategories": ["Cricket Academy","Football Club","Basketball Training","Badminton Academy","Tennis Academy","Table Tennis","Volleyball","Kabaddi"] },
+        { "name": "Aquatic & Adventure", "subcategories": ["Swimming Pool","Scuba Diving","Kayaking","Rock Climbing","Trekking","Paragliding","Bungee Jumping","Skydiving"] },
+        { "name": "Martial Arts & Combat", "subcategories": ["Karate","Taekwondo","Boxing","Judo","Krav Maga","MMA Training","Kickboxing","Wrestling"] },
+        { "name": "Sports Facilities & Venues", "subcategories": ["Cricket Ground","Football Turf","Badminton Court","Basketball Court","Squash Court","Golf Course","Skating Rink","Bowling Alley"] },
+        { "name": "Sports Equipment & Retail", "subcategories": ["Cricket Equipment","Football Gear","Gym Equipment","Cycling Store","Swimming Gear","Outdoor & Camping Gear","Sports Nutrition"] },
+        { "name": "Sports Medicine & Recovery", "subcategories": ["Sports Physiotherapy","Injury Rehabilitation","Sports Massage","Dietitian & Nutritionist","Performance Coaching"] }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Pets & Animals",
+      "icon": "ti-paw",
+      "children": [
+        { "name": "Veterinary Services", "subcategories": ["General Vet Clinic","Pet Hospital","Emergency Vet","Exotic Animal Vet","Livestock Vet","Poultry Vet","Aquatic Animal Vet"] },
+        { "name": "Pet Grooming", "subcategories": ["Dog Grooming","Cat Grooming","Nail Trimming","Pet Spa","Pet Bathing","De-Shedding Treatment","Mobile Grooming"] },
+        { "name": "Pet Boarding & Daycare", "subcategories": ["Dog Boarding","Cat Hostel","Pet Daycare","Pet Sitting","Dog Walking","Pet Hotel"] },
+        { "name": "Pet Training", "subcategories": ["Dog Obedience Training","Puppy Training","Agility Training","Guard Dog Training","Therapy Animal Training","Cat Behaviour Counselling"] },
+        { "name": "Pet Shops & Adoption", "subcategories": ["Dog Breeders","Cat Breeders","Aquarium Fish","Birds & Parrots","Small Animals","Rescue & Adoption Centre","NGO Animal Shelter"] },
+        { "name": "Pet Supplies & Food", "subcategories": ["Pet Food & Treats","Pet Accessories","Pet Clothing","Aquarium Supplies","Bird Cages & Accessories","Reptile Supplies"] },
+        { "name": "Livestock & Farm Animals", "subcategories": ["Cattle & Buffalo","Goat & Sheep","Poultry Birds","Animal Feed Suppliers","Dairy Animal Trading","Stud & Breeding Services"] }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Security & CCTV",
+      "icon": "ti-shield-lock",
+      "children": [
+        { "name": "CCTV & Surveillance", "subcategories": ["CCTV Installation","IP Camera Systems","PTZ Cameras","Thermal Cameras","Video Analytics","NVR & DVR Setup","Cloud Surveillance"] },
+        { "name": "Access Control", "subcategories": ["Biometric Attendance","Door Access Systems","Boom Barriers","Turnstiles & Flap Gates","Vehicle RFID","Visitor Management"] },
+        { "name": "Alarm & Intrusion", "subcategories": ["Burglar Alarm","Motion Sensors","Glass Break Detectors","Panic Buttons","Perimeter Security","Electrified Fencing"] },
+        { "name": "Fire Safety", "subcategories": ["Fire Alarm System","Sprinkler System","Fire Extinguisher Supply","Fire NOC Compliance","Fire Suppression Systems","Smoke Detectors"] },
+        { "name": "Security Guards & Manpower", "subcategories": ["Residential Security","Commercial Security","Event Security","Bank & ATM Security","Bouncers","Armed Guards","Gunman Services"] },
+        { "name": "Vault & Safe", "subcategories": ["Safe & Vault Sales","Bank Locker Fitting","Cash Room Setup","Currency Counting Machines","ATM Installation"] },
+        { "name": "Cybersecurity", "subcategories": ["Network Security","Firewall Setup","Penetration Testing","Data Protection","VAPT Services","SOC Services","Compliance & Audit"] },
+        { "name": "GPS & Vehicle Tracking", "subcategories": ["Fleet GPS Tracking","Asset Tracking","Personal GPS Devices","School Bus Tracking","Anti-Theft Systems"] }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Rent & Buy (Marketplace)",
+      "icon": "ti-exchange",
+      "children": [
+        { "name": "Electronics on Rent", "subcategories": ["Laptop Rental","Projector Rental","Camera Rental","Phone Rental","TV & Display Rental","Gaming Console Rental","DJ Equipment Rental"] },
+        { "name": "Furniture & Home on Rent", "subcategories": ["Furniture Rental","Appliance Rental","Home Décor Rental","AC on Rent","Refrigerator on Rent","Washing Machine on Rent"] },
+        { "name": "Tools & Equipment Rental", "subcategories": ["Power Tools","Construction Equipment","Scaffolding Rental","Generator Rental","Compressor Rental","Surveying Equipment"] },
+        { "name": "Vehicles on Rent", "subcategories": ["Self-Drive Car","Bike on Rent","Tempo Traveller","Bus Hire","Tractor Rental","Forklift Rental","Luxury Car Hire"] },
+        { "name": "Event & Party Rentals", "subcategories": ["Sound System Rental","Stage & Tent","Tables & Chairs","Crockery & Cutlery","Costumes & Props","Backdrop & Decor"] },
+        { "name": "Books & Media Rental", "subcategories": ["Book Lending Library","Comic & Magazine Library","DVD & Game Rental","E-Reader Lending","Toy Library"] },
+        { "name": "Second-Hand & Used Goods", "subcategories": ["Used Mobiles","Used Laptops","Used Furniture","Used Vehicles","Pre-Owned Appliances","Vintage & Antiques","Refurbished Electronics"] },
+        { "name": "Space & Property Rental", "subcategories": ["Co-working Space","Meeting Room Rental","Event Space","Storage Unit","Dark Kitchen Space","Pop-Up Shop Space","Parking Space Rental"] }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,8 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'is_featured')
     search_fields = ('name', 'description', 'slug', 'meta_title')
     autocomplete_fields = ['parent']
+    ordering = ('sort_order', 'name')
+    list_per_page = 50
 
     # -----------------------------------------------------------
     # 2. EDIT/ADD VIEW CONFIGURATION (Separated by sections)

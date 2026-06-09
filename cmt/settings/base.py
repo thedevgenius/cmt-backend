@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'accounts',
     'locations',
     'categories',
+    'businesses',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -133,11 +134,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        # Default Redis port is 6379. '1' is the database number.
+        "LOCATION": "redis://default:Zn3awPpPU74CiRC6y81uSEI8a2dh9L1g@redis-19197.crce300.ap-south-1-2.ec2.cloud.redislabs.com:19197/0", 
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Ignore exceptions so if Redis goes down, it falls back to DB instead of crashing 500
+            "IGNORE_EXCEPTIONS": True, 
+        }
     }
 }
+
+CACHE_TTL = 60 * 60 * 24 # 24 hours
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

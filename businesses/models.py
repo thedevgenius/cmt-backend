@@ -1,4 +1,5 @@
 import uuid
+import pygeohash as pgh
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -19,6 +20,11 @@ class Business(TimeStampedModel, AutoSlugMixin):
         APPROVED = 'APPROVED', _('Approved')
         REJECTED = 'REJECTED', _('Rejected')
         SUSPENDED = 'SUSPENDED', _('Suspended')
+    
+    class Tier(models.TextChoices):
+        BASIC = 'BASIC', 'Basic'
+        PRO = 'PRO', 'Professional'
+        SPONSORED = 'SPONSORED', 'Sponsored (Top Tier)'
 
     # -----------------------------------------------------------
     # IDENTITY & OWNERSHIP
@@ -41,6 +47,12 @@ class Business(TimeStampedModel, AutoSlugMixin):
         Category, 
         related_name='businesses',
         limit_choices_to={'is_active': True}
+    )
+    tier = models.CharField(
+        max_length=20, 
+        choices=Tier.choices, 
+        default=Tier.BASIC,
+        db_index=True
     )
 
     # -----------------------------------------------------------
@@ -70,6 +82,7 @@ class Business(TimeStampedModel, AutoSlugMixin):
     # Exact Coordinates (Standard Decimal approach as established)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    geohash = models.CharField(max_length=12, db_index=True, blank=True)
 
     # -----------------------------------------------------------
     # FLEXIBLE METADATA (JSON)
@@ -121,3 +134,9 @@ class Business(TimeStampedModel, AutoSlugMixin):
 
     def __str__(self):
         return f"{self.name} ({self.get_status_display()})"
+    
+    def save(self, *args, **kwargs):
+        # Auto-generate the geohash if coordinates exist
+        if self.latitude and self.longitude:
+            self.geohash = pgh.encode(float(self.latitude), float(self.longitude), precision=12)
+        super().save(*args, **kwargs)

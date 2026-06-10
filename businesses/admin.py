@@ -32,7 +32,8 @@ class BusinessAdmin(admin.ModelAdmin):
             'fields': (
                 'address_line_1', 'address_line_2', 
                 'city', 'postal_code', 
-                ('latitude', 'longitude')
+                ('latitude', 'longitude'),
+                'geohash'
             )
         }),
         ('Operating Data & Socials', {

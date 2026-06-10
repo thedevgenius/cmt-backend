@@ -20,7 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
     # -----------------------------------------------------------
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'description'),
+            'fields': ('name', 'description', 'image'),
             'classes': ('wide',)
         }),
         ('Hierarchy', {
@@ -28,7 +28,7 @@ class CategoryAdmin(admin.ModelAdmin):
             'description': 'Select a parent category if this is a sub-category. Leave blank for top-level categories.'
         }),
         # ('Media', {
-        #     'fields': ('icon',),
+        #     'fields': ('image',),
         # }),
         ('Visibility & Organization', {
             'fields': ('is_active', 'is_featured', 'sort_order'),

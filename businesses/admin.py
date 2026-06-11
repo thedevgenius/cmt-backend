@@ -5,7 +5,7 @@ from .models import Business
 class BusinessAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner', 'city', 'status', 'is_verified', 'average_rating', 'created_at')
     list_filter = ('status', 'is_verified', 'city', 'categories')
-    search_fields = ('name', 'description', 'email', 'phone_number', 'city', 'slug')
+    search_fields = ('name', 'description')
     
     # Crucial: Categories can be huge, so we use autocomplete to prevent UI freezing
     autocomplete_fields = ['owner', 'categories']

@@ -80,13 +80,15 @@ class Category(TimeStampedModel, AutoSlugMixin):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        # Displays the full path in the Django Admin (e.g., "Home Services > Plumbing")
-        full_path = [self.name]
-        k = self.parent
-        while k is not None:
-            full_path.append(k.name)
-            k = k.parent
-        return ' -> '.join(full_path[::-1])
+        # # Displays the full path in the Django Admin (e.g., "Home Services > Plumbing")
+        # full_path = [self.name]
+        # k = self.parent
+        # while k is not None:
+        #     full_path.append(k.name)
+        #     k = k.parent
+        # return ' -> '.join(full_path[::-1])
+
+        return self.name
 
     def get_descendants(self):
         """

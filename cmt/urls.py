@@ -23,9 +23,9 @@ admin.site.index_title = 'Welcome to Admin Panel'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/', include('core.urls')),
+    path('api/', include('core.urls')),
     path('api/', include('accounts.urls')),
     path('api/', include('locations.urls')),
     path('api/', include('categories.urls')),
-    # path('api/', include('businesses.urls')),
+    path('api/', include('businesses.urls')),
 ]
